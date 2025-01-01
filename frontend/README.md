@@ -1,3 +1,10 @@
+## type gen
+
+```
+npx openapi-typescript http://localhost:3000/apidoc/openapi.json -o ./app/lib/api/v1.d.ts
+```
+
+
 # Welcome to React Router!
 
 A modern, production-ready template for building full-stack React applications using React Router.

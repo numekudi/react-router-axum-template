@@ -1,7 +1,7 @@
 import type { Route } from "./+types/home";
 import { Welcome } from "../welcome/welcome";
-import { useLoaderData } from "react-router";
-
+import type { components, paths } from "~/lib/api/v1";
+import { client } from "~/lib/client";
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "New React Router App" },
@@ -10,8 +10,8 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export const clientLoader = async () => {
-  const data = await fetch(import.meta.env.VITE_API_URL);
-  const d = data.json();
+  const d = await client.GET("/hello")
+  const data   = await d.data
   return d;
 };
 
