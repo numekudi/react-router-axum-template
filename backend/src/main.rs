@@ -58,6 +58,7 @@ async fn main() -> Result<(), io::Error> {
     let (router, api) = OpenApiRouter::with_openapi(ApiDoc::openapi())
         .routes(routes!(health))
         .routes(routes!(handler))
+        .layer(cors_layer)
         .split_for_parts();
 
     let router = router.merge(SwaggerUi::new("/swagger-ui").url("/apidoc/openapi.json", api));
