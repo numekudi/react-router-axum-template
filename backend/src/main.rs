@@ -1,45 +1,14 @@
 use std::{env, net::Ipv4Addr};
 
-use axum::{
-    http::{HeaderValue, Method},
-    Json,
-};
+use axum::http::{HeaderValue, Method};
 use dotenv::dotenv;
-use serde::Serialize;
 use tokio::{io, net::TcpListener};
 use tower_http::cors::{Any, CorsLayer};
-use utoipa::{OpenApi, ToSchema};
+use utoipa::OpenApi;
 use utoipa_axum::{router::OpenApiRouter, routes};
 use utoipa_swagger_ui::SwaggerUi;
-
-#[derive(ToSchema, Serialize)]
-struct Sample {
-    data: String,
-}
-#[utoipa::path(
-    get,
-    path = "/hello",
-    responses(
-        (status = 200, description = "Hello World response", body = Sample)
-    )
-)]
-async fn handler() -> Json<Sample> {
-    Json(Sample {
-        data: "Hello World".to_string(),
-    })
-}
-
-#[utoipa::path(
-    method(get, head),
-    path = "/api/health",
-    responses(
-        (status = OK, description = "Success", body = str, content_type = "text/plain")
-    )
-)]
-async fn health() -> &'static str {
-    "ok"
-}
-
+mod services;
+use services::hello;
 #[tokio::main]
 async fn main() -> Result<(), io::Error> {
     dotenv().ok();
@@ -56,8 +25,7 @@ async fn main() -> Result<(), io::Error> {
         .allow_headers(Any);
 
     let (router, api) = OpenApiRouter::with_openapi(ApiDoc::openapi())
-        .routes(routes!(health))
-        .routes(routes!(handler))
+        .routes(routes!(hello::handler))
         .layer(cors_layer)
         .split_for_parts();
 
