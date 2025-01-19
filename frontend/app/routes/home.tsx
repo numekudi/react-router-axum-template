@@ -10,12 +10,11 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export const clientLoader = async () => {
-  const d = await client.GET("/hello")
-  const data   = await d.data
-  return d;
+  const d = await client.GET("/hello");
+  return d.data;
 };
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  console.dir(loaderData);
+  console.log(loaderData);
   return <Welcome />;
 }
